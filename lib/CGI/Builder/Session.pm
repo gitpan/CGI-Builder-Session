@@ -1,5 +1,5 @@
 package CGI::Builder::Session ;
-$VERSION = 1.1 ;
+$VERSION = 1.2 ;
 
 ; use strict
 ; use CGI::Session
@@ -54,12 +54,7 @@ $VERSION = 1.1 ;
       ; $s->cgi->param($CGI::Session::NAME => $cso->id)
       }
    }
-   
-; sub OH_cleanup
-   { my $s = shift
-   ; $s->cs->flush if exists $$s{cs}
-   }
-   
+
 ; 1
 
 __END__
@@ -69,7 +64,7 @@ __END__
 
 CGI::Builder::Session - CGI::Builder and CGI::Session integration
 
-=head1 VERSION 1.1
+=head1 VERSION 1.2
 
 The latest versions changes are reported in the F<Changes> file in this distribution. To have the complete list of all the extensions of the CBF, see L<CGI::Builder/"Extensions List">
 
@@ -79,7 +74,7 @@ The latest versions changes are reported in the F<Changes> file in this distribu
 
 =item Prerequisites
 
-    CGI::Builder >= 1.0
+    CGI::Builder >= 1.2
     CGI::Session >= 3.95
     File::Spec   >  0
 
@@ -113,15 +108,31 @@ From the directory where this file is located, type:
 
 This module transparently integrates C<CGI::Builder> and C<CGI::Session> in a very handy and flexible framework that can save you some coding. It provides you a mostly automatic and ready to use CGI::Session object (C<cs> property) useful to maintain the state of your application between requests. Please refer to L<CGI::Session> for more documentation about sessions.
 
+=head2 Useful links
+
+=over
+
+=item *
+
+A simple and useful navigation system between the various CBF extensions is available at this URL: http://perl.4pro.net
+
+=item *
+
+More practical topics are probably discussed in the mailing list at this URL: http://lists.sourceforge.net/lists/listinfo/cgi-builder-users
+
+=back
+
 =head2 How it works
 
 This extension creates a CGI::Session object automatically, using the old session id if it is found as a cookie or as a query param. If no session id is found, it creates a new session and automatically adds a session id cookie and a session id param that will be automatically used to send the id to the client
 
 In simple cases you can avoid to init, update and flush the session: just use it and it will work as expected; if you need more customization you can override every single argument, property or even method.
 
+B<Note>: When you include in your CBB the L<CGI::Builde::Magic|CGI::Builde::Magic> extension, you will have magically available a label that will be substituted with the current session id.
+
 =head1 PROPERTY and GROUP ACCESSORS
 
-This module adds some template properties (all those prefixed with 'cs_') to the standard CBF properties. The default of these properties are usually smart enough to do the right job for you, but you can fine-tune the behaviour of your CBB by setting them to the value you need.
+This module adds some session properties (all those prefixed with 'cs_') to the standard CBF properties. The default of these properties are usually smart enough to do the right job for you, but you can fine-tune the behaviour of your CBB by setting them to the value you need.
 
 =head2 cs
 
@@ -201,7 +212,9 @@ B<Overriding Note>: At the moment this method is executed, the C<cs> property is
 
 This extension adds its own C<OH_cleanup> handler, needed just to flush() the C<cs> object if it has been created.
 
-=head1 SUPPORT and FEEDBACK
+=head1 SUPPORT
+
+Support for all the modules of the CBF is via the mailing list. The list is used for general support on the use of the CBF, announcements, bug reports, patches, suggestions for improvements or new features. The API to the CBF is stable, but if you use the CBF in a production environment, it's probably a good idea to keep a watch on the list.
 
 You can join the CBF mailing list at this url:
 

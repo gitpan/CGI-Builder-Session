@@ -1,7 +1,7 @@
 ; use ExtUtils::MakeMaker
 
 ; my $dist = 'CGI::Builder::Session'
-; my $vers = '1.1'
+; my $vers = '1.2'
 
 ; WriteMakefile
    ( NAME           => $dist
@@ -11,7 +11,7 @@
        , ABSTRACT   => 'CGI::Builder and CGI::Session integration'
        )
      : ()
-   , PREREQ_PM      => { 'CGI::Builder' => '1.0'
+   , PREREQ_PM      => { 'CGI::Builder' => '1.2'
                        , 'CGI::Session' => '3.95'
                        , 'File::Spec'   => '0'
                        }

@@ -1,6 +1,12 @@
 CGI-Builder-Session Latest Versions Changes
 
 
+Version 1.2
+- Eliminated the OH_cleanup handler to auto-flush the object (now useless)
+- Changed the prerequisite to C::B version 1.2
+- Some internal changes to be more consistent with new 1.2 version
+- Some POD restyling
+
 Version 1.1
 - Added cs_new_args group accessor to allow customization avoiding
   overriding of cs_new method
