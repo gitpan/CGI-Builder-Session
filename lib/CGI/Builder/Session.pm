@@ -1,5 +1,5 @@
 package CGI::Builder::Session ;
-$VERSION = 1.2 ;
+$VERSION = 1.21 ;
 
 ; use strict
 ; use CGI::Session
@@ -64,7 +64,7 @@ __END__
 
 CGI::Builder::Session - CGI::Builder and CGI::Session integration
 
-=head1 VERSION 1.2
+=head1 VERSION 1.21
 
 The latest versions changes are reported in the F<Changes> file in this distribution. To have the complete list of all the extensions of the CBF, see L<CGI::Builder/"Extensions List">
 
@@ -80,9 +80,9 @@ The latest versions changes are reported in the F<Changes> file in this distribu
 
 =item CPAN
 
-    perl -MCPAN -e 'install CGI::Builder::Session'
+    perl -MCPAN -e 'install Apache::CGI::Builder'
 
-If you want to install all the extensions and prerequisites of the CBF, all in one easy step:
+You have also the possibility to use the Bundle to install all the extensions and prerequisites of the CBF in just one step. Please, notice that the Bundle will install A LOT of modules that you might not need, so use it specially if you want to extensively try the CBF.
 
     perl -MCPAN -e 'install Bundle::CGI::Builder::Complete'
 
@@ -114,11 +114,11 @@ This module transparently integrates C<CGI::Builder> and C<CGI::Session> in a ve
 
 =item *
 
-A simple and useful navigation system between the various CBF extensions is available at this URL: http://perl.4pro.net
+A simple and useful navigation system between the various CBF extensions is available at this URL: L<http://perl.4pro.net>
 
 =item *
 
-More practical topics are probably discussed in the mailing list at this URL: http://lists.sourceforge.net/lists/listinfo/cgi-builder-users
+More practical topics are probably discussed in the mailing list at this URL: L<http://lists.sourceforge.net/lists/listinfo/cgi-builder-users>
 
 =back
 
@@ -208,20 +208,16 @@ You can override this method if you need to execute some code when the C<cs> obj
 
 B<Overriding Note>: At the moment this method is executed, the C<cs> property is not set yet, but the CGI::Session object is already created and available as $_[1].
 
-=head2 OH_cleanup
-
-This extension adds its own C<OH_cleanup> handler, needed just to flush() the C<cs> object if it has been created.
-
 =head1 SUPPORT
 
 Support for all the modules of the CBF is via the mailing list. The list is used for general support on the use of the CBF, announcements, bug reports, patches, suggestions for improvements or new features. The API to the CBF is stable, but if you use the CBF in a production environment, it's probably a good idea to keep a watch on the list.
 
 You can join the CBF mailing list at this url:
 
-    http://lists.sourceforge.net/lists/listinfo/cgi-builder-users
+L<http://lists.sourceforge.net/lists/listinfo/cgi-builder-users>
 
 =head1 AUTHOR and COPYRIGHT
 
-© 2004 by Domizio Demichelis (http://perl.4pro.net)
+© 2004 by Domizio Demichelis (L<http://perl.4pro.net>)
 
 All Rights Reserved. This module is free software. It may be used, redistributed and/or modified under the same terms as perl itself.
