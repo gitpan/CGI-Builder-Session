@@ -1,5 +1,10 @@
 CGI-Builder-Session Latest Versions Changes
 
+Version 1.24
+- Added the 'new_session_init' and the 'session_init' options to the
+  'cs_new_args' accessor
+- A few minor changes in the Makefile.PL and the POD
+- Added memory leaking test
 
 Version 1.23
 - Eliminated version check and installation feedback system
