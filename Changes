@@ -1,4 +1,12 @@
 CGI-Builder-Session Latest Versions Changes
 
+
+Version 1.1
+- Added cs_new_args group accessor to allow customization avoiding
+  overriding of cs_new method
+- Added automatic setting of SID with cookie and param (cs_init)
+- Added an OH_cleanup handler to auto-flush the object
+- Added some tests
+
 Version 1.0
 - First public release

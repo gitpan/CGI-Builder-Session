@@ -1,5 +1,5 @@
 package CGI::Builder::Session ;
-$VERSION = 1.0 ;
+$VERSION = 1.1 ;
 
 ; use strict
 ; use CGI::Session
@@ -12,26 +12,66 @@ $VERSION = 1.0 ;
         , default    => sub{ shift()->cs_new(@_) }
         }
       )
-
+      
+; use Object::groups
+      ( { name       => 'cs_new_args'
+        , default
+          => sub
+              { return { DSN       => undef
+                       , SID       => $_[0]->cgi
+                       , DSN_param => { Directory => File::Spec->tmpdir }
+                       }
+              }
+        }
+      )
+      
 ; sub cs_new
-   { my $s = shift
-   ; CGI::Session->new( undef
-                      , $s->cgi
-                      , { Directory => File::Spec->tmpdir }
-                      )
+   { my $s    = shift
+   ; my $args = $s->cs_new_args
+   ; my $cso  = CGI::Session->new( @$args{qw| DSN
+                                              SID
+                                              DSN_param
+                                            |
+                                         }
+                                 )
+   ; $s->cs_init($cso)
+   ; $cso
    }
-
+   
+; sub cs_init
+   { my ($s, $cso) = @_
+   ; if ( $cso->is_new ) # new session
+      { my $cs_cookie = $s->cgi->cookie($CGI::Session::NAME => $cso->id)
+      ; my $cookie_header = $s->header('-cookie')
+      ; $s->header(-cookie => ref $cookie_header eq 'ARRAY'
+                              ? do{ push @$cookie_header, $cs_cookie
+                                  ; $cookie_header
+                                  }
+                              : $cookie_header
+                                ? [ $cookie_header, $cs_cookie ]
+                                : $cs_cookie
+                  )
+      ; $s->cgi->param($CGI::Session::NAME => $cso->id)
+      }
+   }
+   
+; sub OH_cleanup
+   { my $s = shift
+   ; $s->cs->flush if exists $$s{cs}
+   }
+   
 ; 1
 
 __END__
+
 
 =head1 NAME
 
 CGI::Builder::Session - CGI::Builder and CGI::Session integration
 
-=head1 VERSION 1.0
+=head1 VERSION 1.1
 
-To have the complete list of all the extensions of the CBF, see L<CGI::Builder/"Extensions List">
+The latest versions changes are reported in the F<Changes> file in this distribution. To have the complete list of all the extensions of the CBF, see L<CGI::Builder/"Extensions List">
 
 =head1 INSTALLATION
 
@@ -71,11 +111,17 @@ From the directory where this file is located, type:
 
 =head1 DESCRIPTION
 
-This is a very simple module which integrates C<CGI::Builder> and C<CGI::Session> and provides you a ready to use CGI::Session object (C<cs> property) useful to maintain the state of your application between requests. Please refer to L<CGI::Session> for more documentation.
+This module transparently integrates C<CGI::Builder> and C<CGI::Session> in a very handy and flexible framework that can save you some coding. It provides you a mostly automatic and ready to use CGI::Session object (C<cs> property) useful to maintain the state of your application between requests. Please refer to L<CGI::Session> for more documentation about sessions.
 
-=head1 PROPERTY ACCESSORS
+=head2 How it works
 
-This module adds one property to the standard CBF properties.
+This extension creates a CGI::Session object automatically, using the old session id if it is found as a cookie or as a query param. If no session id is found, it creates a new session and automatically adds a session id cookie and a session id param that will be automatically used to send the id to the client
+
+In simple cases you can avoid to init, update and flush the session: just use it and it will work as expected; if you need more customization you can override every single argument, property or even method.
+
+=head1 PROPERTY and GROUP ACCESSORS
+
+This module adds some template properties (all those prefixed with 'cs_') to the standard CBF properties. The default of these properties are usually smart enough to do the right job for you, but you can fine-tune the behaviour of your CBB by setting them to the value you need.
 
 =head2 cs
 
@@ -100,20 +146,60 @@ This property returns the internal C<CGI::Session> object that is automatically 
         my $categ = $s->cs->param("category");
     }
 
-B<Note>: You can completely override the creation of the internal object by overriding the C<cs_new()> method.
+B<Note>: You can change the default arguments that are internally used to create the object by using the C<cs_new_args> group accessor, or you can completely override the creation of the internal object by overriding the C<cs_new()> method.
+
+=head2 cs_new_args( arguments )
+
+This property group accessor handles the CGI::Session constructor arguments that are used in the creation of the internal CGI::Session object. Use it to change the argument you need to the creation of the new object. B<Note>: use it BEFORE using the C<cs> object or your arguments will be ignored.
+
+It uses the following defaults:
+
+=over
+
+=item * DSN
+
+Data Source Name: this argument is set to the undef value by default (i.e. DSN equal to File).
+
+=item * SID
+
+Session ID: this argument is set by default to the cookie, or to the query param named $CGI::Session::NAME (usually 'CGISESSID'), or to the undef value if neither the cookie nor the param are found.
+
+=item * DSN_param
+
+Data Source Name param This argument is referring to the File DSN, and is set by default to:
+
+    { Directory => File::Spec->tmpdir }
+
+=back
+
+These defaults produce the most compatible and multiplatform CGI::Session object which is equal to:
+
+    CGI::Session->new( undef,    # DNS equal to File
+                       $s->cgi , # SID equal to cookie or param $CGI::Session::NAME
+                       { Directory => File::Spec->tmpdir } # DSN_param for File
+                     );
+
+B<Note>: You should change just the argument that you need to customize, i.e. usually just DSN and DSN_param.
 
 =head1 METHODS
 
 =head2 cs_new()
 
-This method is not intended to be used directly in your CBB. It is used internally to initialize and returns the C<CGI::Session> object with the more compatible and multi platform defaults, that are:
+This method is not intended to be used directly in your CBB. It is used internally to initialize and return the C<CGI::Session> object. You usually don't need even to override it since you can customize the C<cs> object by using the C<cs_new_args> group accessor, or eventually override the C<cs_init> method.
 
-    CGI::Session->new( undef,   # DNS equal to File
-                       $s->cgi ,
-                       { Directory => File::Spec->tmpdir }
-                     );
+=head2 cs_init
 
-B<Note>: You should redefine this method in your CBB if you need some more customized object. (see L<CGI::Session>).
+This method is internally called by the C<cs_new()> method, so you don't need to use it unless you need to override it. The purpose of this method is setting automatically the session id that has to be sent to the client. It does so by adding the session id cookie to the headers, and by adding also the session id query param to the query.
+
+B<Note>: these operations are done only if the session is new and using the $CGI::Session::NAME as the name of the cookie and query param, so you can set that variable as usual to set a different session id name.
+
+You can override this method if you need to execute some code when the C<cs> object is created or if you need to pass the new session id by any other means (in this case you should also accordingly update the 'SID' argument of the C<cs_new_args>).
+
+B<Overriding Note>: At the moment this method is executed, the C<cs> property is not set yet, but the CGI::Session object is already created and available as $_[1].
+
+=head2 OH_cleanup
+
+This extension adds its own C<OH_cleanup> handler, needed just to flush() the C<cs> object if it has been created.
 
 =head1 SUPPORT and FEEDBACK
 
