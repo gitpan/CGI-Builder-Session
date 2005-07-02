@@ -1,10 +1,10 @@
 package CGI::Builder::Session ;
-$VERSION = 1.24 ;
+$VERSION = 1.25 ;
+use strict ;
 
 # This file uses the "Perlish" coding style
 # please read http://perl.4pro.net/perlish_coding_style.html
 
-; use strict
 ; use CGI::Session
 ; $Carp::Internal{+__PACKAGE__}++
 ; $Carp::Internal{'CGI::Session'}++
@@ -70,12 +70,13 @@ $VERSION = 1.24 ;
 
 __END__
 
+=pod
 
 =head1 NAME
 
 CGI::Builder::Session - CGI::Builder and CGI::Session integration
 
-=head1 VERSION 1.24
+=head1 VERSION 1.25
 
 The latest versions changes are reported in the F<Changes> file in this distribution. To have the complete list of all the extensions of the CBF, see L<CGI::Builder/"Extensions List">
 
@@ -240,3 +241,5 @@ See L<CGI::Builder/"SUPPORT">.
 © 2004 by Domizio Demichelis (L<http://perl.4pro.net>)
 
 All Rights Reserved. This module is free software. It may be used, redistributed and/or modified under the same terms as perl itself.
+
+=cut
