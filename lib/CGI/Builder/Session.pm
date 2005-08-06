@@ -1,5 +1,5 @@
 package CGI::Builder::Session ;
-$VERSION = 1.25 ;
+$VERSION = 1.26 ;
 use strict ;
 
 # This file uses the "Perlish" coding style
@@ -76,7 +76,7 @@ __END__
 
 CGI::Builder::Session - CGI::Builder and CGI::Session integration
 
-=head1 VERSION 1.25
+=head1 VERSION 1.26
 
 The latest versions changes are reported in the F<Changes> file in this distribution. To have the complete list of all the extensions of the CBF, see L<CGI::Builder/"Extensions List">
 

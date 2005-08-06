@@ -6,7 +6,9 @@ README
 ses/cgisess_13098a934c1ec9e7305c886bb820768d
 ses/cgisess_393346a973f427f016e4ddba71d99c5f
 ses/cgisess_4550a776c4c82853ad6dd47ba3c04534
+ses/cgisess_62037eb48301a6d159285db9be111d2c
 ses/cgisess_b2c0e4efb9c3b3535af5001b7ed6e5eb
+ses/cgisess_b5fa317b87e42da759beb16a3c1526cc
 t/01_class.t
 t/02_features.t
 t/03_memory_leaking.t
